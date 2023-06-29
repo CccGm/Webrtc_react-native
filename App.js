@@ -7,6 +7,8 @@ import {
   View,
   Text,
   TouchableOpacity,
+  Linking,
+  Share,
 } from 'react-native';
 import TextInputContainer from './components/TextInputContainer';
 import SocketIOClient from 'socket.io-client';
@@ -26,6 +28,7 @@ import VideoOff from './asset/VideoOff';
 import CameraSwitch from './asset/CameraSwitch';
 import IconContainer from './components/IconContainer';
 import InCallManager from 'react-native-incall-manager';
+import Icon from 'react-native-vector-icons/FontAwesome5';
 
 export default function App({}) {
   const [localStream, setlocalStream] = useState(null);
@@ -214,6 +217,17 @@ export default function App({}) {
     socket.emit('call', data);
   }
 
+  const onShare = async () => {
+    try {
+      const result = await Share.share({
+        message:
+          'My Caller ID is :' + callerId + ' , Enter this id to chat with me.',
+      });
+    } catch (error) {
+      Alert.alert(error.message);
+    }
+  };
+
   const JoinScreen = () => {
     return (
       <KeyboardAvoidingView
@@ -234,6 +248,15 @@ export default function App({}) {
                 alignItems: 'center',
                 borderRadius: 14,
               }}>
+              <View
+                style={{
+                  position: 'absolute',
+                  top: 10,
+                  right: 12,
+                  padding: 3,
+                }}>
+                <Icon name="share" size={25} color={'gray'} onPress={onShare} />
+              </View>
               <Text
                 style={{
                   fontSize: 18,
